@@ -1,0 +1,6 @@
+{
+  "databaseURL": "https://Chinmay-Nawkar-s-workspace-lkr0og.eu-west-1.xata.sh/db/chinmay_vloom",
+  "codegen": {
+    "output": "src/xata.ts"
+  }
+}

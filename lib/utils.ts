@@ -34,16 +34,6 @@ export const getEnv = (key: string): string => {
   return value;
 };
 
-// Get env helper with optional fallback for static rendering
-export const getEnvOptional = (key: string, fallback: string = ""): string => {
-  const value = process.env[key];
-  if (!value) {
-    console.warn(`Missing env variable: ${key}, using fallback`);
-    return fallback;
-  }
-  return value;
-};
-
 // API fetch helper with required Bunny CDN options
 export const apiFetch = async <T = Record<string, unknown>>(
   url: string,

@@ -40,57 +40,54 @@ Built with Next.js and Bunny.net, this Full Stack Screen Recording & Video Shari
 **Developed by:** [Chinmay Nawkar](https://github.com/chinmaynawkar)
 
 ## <a name="tech-stack">⚙️ Tech Stack</a>
+
 - **[Arcjet](https://arcjet.com)** is a developer-first security platform that integrates bot protection, rate limiting, email validation, and attack protection into your application with minimal code. It offers customizable protection for forms, login pages, and API routes, supporting frameworks like Node.js, Next.js, Deno, Bun, Remix, SvelteKit, and NestJS.
 
 - **[Bunny.net](https://bunny.net)** is a developer-friendly video delivery platform offering global CDN, edge storage, adaptive streaming, and a customizable player. It simplifies video management with features like automatic encoding, token-based security, and real-time analytics. Ideal for seamless, secure, and scalable video streaming.
 
-- **[Better Auth](https://www.better-auth.com/)** is a TypeScript-first authentication and authorization library that simplifies implementing secure login, two-factor authentication, and social sign-ins, all while supporting multi-tenancy. 
-  
-- **[Drizzle ORM](https://orm.drizzle.team/)** is a type-safe, lightweight ORM for SQL databases, providing a modern solution for interacting with databases using TypeScript, supporting migrations, queries, and schema management.  
+- **[Better Auth](https://www.better-auth.com/)** is a TypeScript-first authentication and authorization library that simplifies implementing secure login, two-factor authentication, and social sign-ins, all while supporting multi-tenancy.
+- **[Drizzle ORM](https://orm.drizzle.team/)** is a type-safe, lightweight ORM for SQL databases, providing a modern solution for interacting with databases using TypeScript, supporting migrations, queries, and schema management.
 
-- **[Next.js](https://nextjs.org/)** is a powerful React framework that enables the development of fast, scalable web applications with features like server-side rendering, static site generation, and API routes for building full-stack applications. 
+- **[Next.js](https://nextjs.org/)** is a powerful React framework that enables the development of fast, scalable web applications with features like server-side rendering, static site generation, and API routes for building full-stack applications.
 
-- **[Tailwind CSS](https://tailwindcss.com/)** is a utility-first CSS framework that allows developers to design custom user interfaces by applying low-level utility classes directly in HTML, streamlining the design process.  
-  
+- **[Tailwind CSS](https://tailwindcss.com/)** is a utility-first CSS framework that allows developers to design custom user interfaces by applying low-level utility classes directly in HTML, streamlining the design process.
 - **[TypeScript](https://www.typescriptlang.org/)** is a superset of JavaScript that adds static typing, providing better tooling, code quality, and error detection for developers, making it ideal for building large-scale applications.
 
 - **[Xata](https://xata.io)** is a serverless PostgreSQL platform offering auto-scaling, zero-downtime schema migrations, real-time branching, and built-in full-text search. It provides a spreadsheet-like UI for intuitive data management, enhancing modern development workflows.
 
-
 ## <a name="features">🔋 Features</a>
 
-👉 **Authentication**: Secure user sign-up and sign-in with Better-Auth & Google.  
+👉 **Authentication**: Secure user sign-up and sign-in with Better-Auth & Google.
 
-👉 **Screen Recording**: Capture your screen directly within the app for seamless video recording.  
+👉 **Screen Recording**: Capture your screen directly within the app for seamless video recording.
 
-👉 **Video Uploading**: Effortlessly upload videos with a simple interface, supporting both public and private settings.  
+👉 **Video Uploading**: Effortlessly upload videos with a simple interface, supporting both public and private settings.
 
-👉 **AI Transcripts**: Get AI-generated transcripts for uploaded videos, making content more accessible and searchable.  
+👉 **AI Transcripts**: Get AI-generated transcripts for uploaded videos, making content more accessible and searchable.
 
-👉 **Privacy Control**: Toggle video visibility between public and private, ensuring full control over your content.  
+👉 **Privacy Control**: Toggle video visibility between public and private, ensuring full control over your content.
 
 👉 **Arcjet Integration**: Easily implement bot protection, rate limiting, email validation, and attack protection with minimal code, enhancing your app's security.
 
-👉 **Metadata**: Access video metadata, including unique video ID and URL, for easy sharing and referencing.  
+👉 **Metadata**: Access video metadata, including unique video ID and URL, for easy sharing and referencing.
 
-👉 **Search Functionality**: Find your videos quickly with an intuitive search bar, streamlining navigation.  
+👉 **Search Functionality**: Find your videos quickly with an intuitive search bar, streamlining navigation.
 
-👉 **Share Videos**: Share videos via unique links for easy access and distribution.  
+👉 **Share Videos**: Share videos via unique links for easy access and distribution.
 
-👉 **Modern UI/UX**: Clean, responsive design built with Tailwind CSS for a sleek user experience.  
+👉 **Modern UI/UX**: Clean, responsive design built with Tailwind CSS for a sleek user experience.
 
-👉 **Database Integration**: Utilize Xata for real-time, scalable database management.  
+👉 **Database Integration**: Utilize Xata for real-time, scalable database management.
 
-👉 **Type-Safe Queries**: Benefit from Drizzle ORM’s type-safe queries for secure and efficient database interactions.  
+👉 **Type-Safe Queries**: Benefit from Drizzle ORM’s type-safe queries for secure and efficient database interactions.
 
-👉 **Scalable Tech Stack**: Built with Next.js for a fast, production-ready web application that scales seamlessly.  
+👉 **Scalable Tech Stack**: Built with Next.js for a fast, production-ready web application that scales seamlessly.
 
-👉 **Code Reusability**: Leverage reusable components and a modular codebase for efficient development.  
+👉 **Code Reusability**: Leverage reusable components and a modular codebase for efficient development.
 
-👉 **Cross-Device Compatibility**: Fully responsive design that works seamlessly across all devices.  
+👉 **Cross-Device Compatibility**: Fully responsive design that works seamlessly across all devices.
 
 And many more, including enhanced security and optimized video performance!
-
 
 ## <a name="quick-start">🤸 Quick Start</a>
 
@@ -160,10 +157,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser to view the project.
 
-
 ## <a name="links">🔗 Links</a>
 
-- **GitHub Repository**: [https://github.com/chinmaynawkar/screen-sharing-recording-app](https://github.com/chinmaynawkar/screen-sharing-recording-app)
+- **GitHub Repository**: [https://github.com/chinmaynawkar/screen-sharing-recording-app](https://github.com/chinmaynawkar/vloom-screen-broadcaster-recorder)
 - **Author**: [Chinmay Nawkar](https://github.com/chinmaynawkar)
 
 ## <a name="more">🚀 More</a>

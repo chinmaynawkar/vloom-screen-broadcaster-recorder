@@ -5,6 +5,13 @@ import Image from "next/image";
 
 import { authClient } from "@/lib/auth-client";
 
+/**
+ * SignIn Page Component
+ *
+ * Renders the main sign-in page for the Vloom application.
+ * Includes a testimonial section with a logo, description, and a Google sign-in button.
+ * Also includes an overlay for the background.
+ */
 const SignIn = () => {
   return (
     <main className="sign-in">
