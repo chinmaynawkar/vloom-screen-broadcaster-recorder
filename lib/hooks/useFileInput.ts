@@ -1,3 +1,26 @@
+/**
+ * useFileInput - React hook for handling file input in forms
+ *
+ * Usage context:
+ * - Used in upload forms (e.g. uploading videos or thumbnails) throughout the project.
+ * - Enforces maximum file size.
+ * - For videos, the hook will automatically extract and provide the video's duration.
+ * - Handles cleanup of created object URLs to avoid memory leaks.
+ *
+ * Returns: {
+ *   file: File|null,                  // The selected file object
+ *   previewUrl: string|null,          // A blob URL for display/preview
+ *   duration: number|null,            // Duration (in seconds) for video files, else null
+ *   inputRef: React.RefObject,        // Ref for the input element
+ *   handleFileChange: function,       // onChange handler for file input
+ *   resetFile: function,              // Resets/clears the current file selection
+ * }
+ *
+ * Example:
+ *   const videoInput = useFileInput(MAX_VIDEO_SIZE);
+ *   <input ref={videoInput.inputRef} onChange={videoInput.handleFileChange} ... />
+ */
+
 import { ChangeEvent, useRef, useState } from "react";
 
 export const useFileInput = (maxSize: number) => {

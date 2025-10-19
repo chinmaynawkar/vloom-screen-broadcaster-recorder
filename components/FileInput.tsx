@@ -1,5 +1,19 @@
 import Image from "next/image";
 
+/**
+ * FileInput component
+ *
+  @param id - The id of the file input.
+  @param label - The label of the file input.
+  @param accept - The accept attribute of the file input.
+  @param file - The file object.
+  @param previewUrl - The preview URL of the file.
+  @param inputRef - The ref of the file input.
+  @param onChange - The onChange handler of the file input.
+  @param onReset - The onReset handler of the file input.
+  @param type - The type of the file input.
+ */
+
 const FileInput = ({
   id,
   label,

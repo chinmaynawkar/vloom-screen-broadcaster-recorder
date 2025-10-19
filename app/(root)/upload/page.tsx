@@ -1,5 +1,9 @@
 "use client";
 
+/**
+ * Upload page for videos. Handles video, thumbnail and form data upload.
+ * Uses hooks to manage file input states and submittal flow.
+ */
 import { useState, FormEvent, ChangeEvent, useEffect } from "react";
 import {
   getVideoUploadUrl,
@@ -11,6 +15,13 @@ import { FileInput, FormField } from "@/components";
 import { useFileInput } from "@/lib/hooks/useFileInput";
 import { MAX_THUMBNAIL_SIZE, MAX_VIDEO_SIZE } from "@/constants";
 
+/**
+ * Uploads a file to Bunny CDN using provided uploadUrl and accessKey.
+ * Throws error if upload fails.
+ * @param file The file to upload.
+ * @param uploadUrl The CDN pre-signed upload URL.
+ * @param accessKey Access key for authentication.
+ */
 const uploadFileToBunny = (
   file: File,
   uploadUrl: string,
@@ -28,6 +39,10 @@ const uploadFileToBunny = (
       throw new Error(`Upload failed with status ${response.status}`);
   });
 
+/**
+ * Main page for uploading a video and its metadata.
+ * Handles form state, file inputs, upload logic, and error display.
+ */
 const UploadPage = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -40,14 +55,22 @@ const UploadPage = () => {
     visibility: "public",
   });
   const video = useFileInput(MAX_VIDEO_SIZE);
+  /** File input hook for thumbnail */
   const thumbnail = useFileInput(MAX_THUMBNAIL_SIZE);
 
+  /**
+   * Update video duration if changed.
+   */
   useEffect(() => {
     if (video.duration !== null) {
       setVideoDuration(video.duration);
     }
   }, [video.duration]);
 
+  /**
+   * Loads a locally recorded video from sessionStorage, if available.
+   * Useful for workflows that involve recording a new video in-browser.
+   */
   useEffect(() => {
     const checkForRecordedVideo = async () => {
       try {
@@ -83,6 +106,10 @@ const UploadPage = () => {
     checkForRecordedVideo();
   }, [video]);
 
+  /**
+   * Handles change in input fields for form data.
+   * @param e Input change event for title, description, etc.
+   */
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
@@ -90,6 +117,11 @@ const UploadPage = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  /**
+   * Handles form submission. Uploads video and thumbnail,
+   * saves video metadata, then redirects to video page.
+   * Sets error if any step fails.
+   */
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
