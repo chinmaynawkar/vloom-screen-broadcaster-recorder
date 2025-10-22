@@ -4,15 +4,17 @@
  * Upload page for videos. Handles video, thumbnail and form data upload.
  * Uses hooks to manage file input states and submittal flow.
  */
-import { useState, FormEvent, ChangeEvent, useEffect } from "react";
+import { useState, FormEvent, ChangeEvent, useEffect, Suspense } from "react";
 import {
   getVideoUploadUrl,
   getThumbnailUploadUrl,
   saveVideoDetails,
 } from "@/lib/actions/video";
 import { useRouter } from "next/navigation";
-import { FileInput, FormField } from "@/components";
+import { FileInput, FormField, UploadFormShimmer } from "@/components";
+import LoadingButton from "@/components/LoadingButton";
 import { useFileInput } from "@/lib/hooks/useFileInput";
+import { useLoadingContext } from "@/lib/contexts/LoadingContext";
 import { MAX_THUMBNAIL_SIZE, MAX_VIDEO_SIZE } from "@/constants";
 
 /**
@@ -45,6 +47,7 @@ const uploadFileToBunny = (
  */
 const UploadPage = () => {
   const router = useRouter();
+  const { startLoading, stopLoading } = useLoadingContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [videoDuration, setVideoDuration] = useState<number | null>(null);
@@ -74,31 +77,43 @@ const UploadPage = () => {
   useEffect(() => {
     const checkForRecordedVideo = async () => {
       try {
+        // Try loading a previously recorded video from sessionStorage (e.g. after a screen recording workflow)
         const stored = sessionStorage.getItem("recordedVideo");
         if (!stored) return;
 
+        // Parse the saved metadata for the recorded video (URL, filename, MIME type, duration)
         const { url, name, type, duration } = JSON.parse(stored);
+
+        // Download the Blob from its object URL so we can create a real File instance
         const blob = await fetch(url).then((res) => res.blob());
+        // Wrap the blob data in a File object to simulate a user file upload
         const file = new File([blob], name, { type, lastModified: Date.now() });
 
         if (video.inputRef.current) {
+          // Simulate a manual file input: make a DataTransfer containing the new File
           const dataTransfer = new DataTransfer();
           dataTransfer.items.add(file);
+          // Assign the file to the file input field
           video.inputRef.current.files = dataTransfer.files;
 
+          // Dispatch a change event to trigger native input updates and React handler
           const event = new Event("change", { bubbles: true });
           video.inputRef.current.dispatchEvent(event);
 
+          // Also call our custom file change handler for hook state update
           video.handleFileChange({
             target: { files: dataTransfer.files },
           } as ChangeEvent<HTMLInputElement>);
         }
 
+        // Restore the duration if it was saved with the recording
         if (duration) setVideoDuration(duration);
 
+        // Clean up: remove the entry and revoke the Blob URL to free memory
         sessionStorage.removeItem("recordedVideo");
         URL.revokeObjectURL(url);
       } catch (err) {
+        // Log any unexpected errors in the loading process
         console.error("Error loading recorded video:", err);
       }
     };
@@ -126,6 +141,7 @@ const UploadPage = () => {
     e.preventDefault();
 
     setIsSubmitting(true);
+    startLoading("Uploading video...");
 
     try {
       if (!video.file || !thumbnail.file) {
@@ -138,6 +154,7 @@ const UploadPage = () => {
         return;
       }
 
+      startLoading("Preparing upload...");
       const {
         videoId,
         uploadUrl: videoUploadUrl,
@@ -147,8 +164,10 @@ const UploadPage = () => {
       if (!videoUploadUrl || !videoAccessKey)
         throw new Error("Failed to get video upload credentials");
 
+      startLoading("Uploading video file...");
       await uploadFileToBunny(video.file, videoUploadUrl, videoAccessKey);
 
+      startLoading("Uploading thumbnail...");
       const {
         uploadUrl: thumbnailUploadUrl,
         cdnUrl: thumbnailCdnUrl,
@@ -164,6 +183,7 @@ const UploadPage = () => {
         thumbnailAccessKey
       );
 
+      startLoading("Saving video details...");
       await saveVideoDetails({
         videoId,
         thumbnailUrl: thumbnailCdnUrl,
@@ -171,81 +191,111 @@ const UploadPage = () => {
         duration: videoDuration,
       });
 
+      startLoading("Redirecting...");
       router.push(`/video/${videoId}`);
     } catch (error) {
       console.error("Error submitting form:", error);
+      setError("Upload failed. Please try again.");
     } finally {
       setIsSubmitting(false);
+      stopLoading();
     }
   };
 
   return (
-    <main className="wrapper-md upload-page">
-      <h1>Upload a video</h1>
-      {error && <div className="error-field">{error}</div>}
-      <form
-        className="rounded-20 gap-6 w-full flex flex-col shadow-10 px-5 py-7.5"
-        onSubmit={onSubmit}
-      >
-        <FormField
-          id="title"
-          label="Title"
-          value={formData.title}
-          onChange={handleInputChange}
-          placeholder="Enter a clear and concise video title"
-        />
+    <main className="upload-page">
+      <div className="overlay" />
 
-        <FormField
-          id="description"
-          label="Description"
-          value={formData.description}
-          onChange={handleInputChange}
-          placeholder="Briefly describe what this video is about"
-          as="textarea"
-        />
+      {/* Hero Section */}
+      <div className="upload-hero">
+        <div className="wrapper">
+          <h1>Share Your Story</h1>
+          <p>
+            Upload your video and reach viewers around the world. Add details to
+            help people discover your content.
+          </p>
+        </div>
+      </div>
 
-        <FileInput
-          id="video"
-          label="Video"
-          accept="video/*"
-          file={video.file}
-          previewUrl={video.previewUrl}
-          inputRef={video.inputRef}
-          onChange={video.handleFileChange}
-          onReset={video.resetFile}
-          type="video"
-        />
+      {/* Upload Form Container */}
+      <div className="upload-container">
+        {error && <div className="error-field">{error}</div>}
+        <form onSubmit={onSubmit}>
+          <FormField
+            id="title"
+            label="Title"
+            value={formData.title}
+            onChange={handleInputChange}
+            placeholder="Enter a clear and concise video title"
+          />
 
-        <FileInput
-          id="thumbnail"
-          label="Thumbnail"
-          accept="image/*"
-          file={thumbnail.file}
-          previewUrl={thumbnail.previewUrl}
-          inputRef={thumbnail.inputRef}
-          onChange={thumbnail.handleFileChange}
-          onReset={thumbnail.resetFile}
-          type="image"
-        />
+          <FormField
+            id="description"
+            label="Description"
+            value={formData.description}
+            onChange={handleInputChange}
+            placeholder="Briefly describe what this video is about"
+            as="textarea"
+          />
 
-        <FormField
-          id="visibility"
-          label="Visibility"
-          value={formData.visibility}
-          onChange={handleInputChange}
-          as="select"
-          options={[
-            { value: "public", label: "Public" },
-            { value: "private", label: "Private" },
-          ]}
-        />
+          <FileInput
+            id="video"
+            label="Video"
+            accept="video/*"
+            file={video.file}
+            previewUrl={video.previewUrl}
+            inputRef={video.inputRef}
+            onChange={video.handleFileChange}
+            onReset={video.resetFile}
+            type="video"
+          />
 
-        <button type="submit" disabled={isSubmitting} className="submit-button">
-          {isSubmitting ? "Uploading..." : "Upload Video"}
-        </button>
-      </form>
+          <FileInput
+            id="thumbnail"
+            label="Thumbnail"
+            accept="image/*"
+            file={thumbnail.file}
+            previewUrl={thumbnail.previewUrl}
+            inputRef={thumbnail.inputRef}
+            onChange={thumbnail.handleFileChange}
+            onReset={thumbnail.resetFile}
+            type="image"
+          />
+
+          <FormField
+            id="visibility"
+            label="Visibility"
+            value={formData.visibility}
+            onChange={handleInputChange}
+            as="select"
+            options={[
+              { value: "public", label: "Public" },
+              { value: "private", label: "Private" },
+            ]}
+          />
+
+          <LoadingButton
+            type="submit"
+            isLoading={isSubmitting}
+            loadingText="Uploading..."
+            className="submit-button w-full"
+            variant="primary"
+            size="lg"
+          >
+            Upload Video
+          </LoadingButton>
+        </form>
+      </div>
     </main>
   );
 };
 
-export default UploadPage;
+const UploadPageWrapper = () => {
+  return (
+    <Suspense fallback={<UploadFormShimmer />}>
+      <UploadPage />
+    </Suspense>
+  );
+};
+
+export default UploadPageWrapper;

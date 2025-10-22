@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Karla } from "next/font/google";
 import "./globals.css";
 import { satoshi } from "../fonts/font";
+import { LoadingProvider } from "@/lib/contexts/LoadingContext";
+import GlobalLoadingOverlay from "@/components/GlobalLoadingOverlay";
+import ClientLayout from "@/components/ClientLayout";
 
 const geistKarla = Karla({
   variable: "--font-geist-karla",
@@ -22,7 +25,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <body
         className={`${geistKarla.variable} ${satoshi.variable} font-karla antialiased`}
       >
-        {children}
+        <LoadingProvider>
+          <ClientLayout>{children}</ClientLayout>
+          <GlobalLoadingOverlay />
+        </LoadingProvider>
       </body>
     </html>
   );
