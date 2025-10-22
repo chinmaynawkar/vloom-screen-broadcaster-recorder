@@ -1,7 +1,6 @@
 <div align="center">
   <br />
     <a href="https://github.com/chinmaynawkar/screen-sharing-recording-app" target="_blank">
-      <img src="public/readme/hero.jpg" alt="Project Banner">
     </a>
   <br />
 
