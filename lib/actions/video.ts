@@ -20,7 +20,7 @@ import {
   withErrorHandling,
 } from "@/lib/utils";
 import { BUNNY } from "@/constants";
-import aj, { fixedWindow, request } from "../arcjet";
+// import aj, { fixedWindow, request } from "../arcjet";
 
 /** Bunny platform base URLs and credentials pulled from environment. */
 const VIDEO_STREAM_BASE_URL = BUNNY.STREAM_BASE_URL;
@@ -33,23 +33,12 @@ const ACCESS_KEYS = {
 };
 
 /**
- * Applies Arcjet rate limiting to block abusive users by fingerprint.
- * Throws error if rate limit is exceeded.
+ * Placeholder for rate limiting (Arcjet removed to reduce bundle size)
+ * TODO: Implement alternative rate limiting if needed
  */
 const validateWithArcjet = async (fingerPrint: string) => {
-  const rateLimit = aj.withRule(
-    fixedWindow({
-      mode: "LIVE",
-      window: "1m",
-      max: 2,
-      characteristics: ["fingerprint"],
-    })
-  );
-  const req = await request();
-  const decision = await rateLimit.protect(req, { fingerprint: fingerPrint });
-  if (decision.isDenied()) {
-    throw new Error("Rate Limit Exceeded");
-  }
+  // Rate limiting temporarily disabled to reduce middleware size
+  // TODO: Implement alternative rate limiting solution
 };
 
 /**
