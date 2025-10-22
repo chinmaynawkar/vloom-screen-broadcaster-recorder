@@ -32,5 +32,11 @@ export const auth = betterAuth({
     },
   },
   plugins: [nextCookies()],
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/$/, ''),
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, ''),
+  trustedOrigins: async (): Promise<string[]> => {
+    return [
+      process.env.NEXT_PUBLIC_BASE_URL!,
+      process.env.VERCEL_URL!,
+    ].filter(Boolean) as string[];
+  },
 });
