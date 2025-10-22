@@ -1,9 +1,18 @@
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 import { getAllVideosByUser } from "@/lib/actions/video";
-import { EmptyState, SharedHeader, VideoCard } from "@/components";
+import {
+  EmptyState,
+  SharedHeader,
+  VideoCard,
+  ProfileShimmer,
+} from "@/components";
 
-const ProfilePage = async ({ params, searchParams }: ParamsWithSearch) => {
+const ProfilePageContent = async ({
+  params,
+  searchParams,
+}: ParamsWithSearch) => {
   const { id } = await params; // exposes the id from the URL
   const { query, filter } = await searchParams;
 
@@ -43,6 +52,14 @@ const ProfilePage = async ({ params, searchParams }: ParamsWithSearch) => {
         />
       )}
     </main>
+  );
+};
+
+const ProfilePage = async ({ params, searchParams }: ParamsWithSearch) => {
+  return (
+    <Suspense fallback={<ProfileShimmer />}>
+      <ProfilePageContent params={params} searchParams={searchParams} />
+    </Suspense>
   );
 };
 

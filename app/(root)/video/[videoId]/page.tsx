@@ -1,9 +1,11 @@
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
 
 import { VideoDetailHeader, VideoInfo, VideoPlayer } from "@/components";
 import { getTranscript, getVideoById } from "@/lib/actions/video";
+import VideoDetailShimmer from "@/components/VideoDetailShimmer";
 
-const page = async ({ params }: Params) => {
+const VideoDetailContent = async ({ params }: Params) => {
   const { videoId } = await params;
 
   const { user, video } = await getVideoById(videoId);
@@ -12,7 +14,7 @@ const page = async ({ params }: Params) => {
   const transcript = await getTranscript(videoId);
 
   return (
-    <main className="wrapper page">
+    <div className="wrapper page">
       <VideoDetailHeader
         title={video.title}
         createdAt={video.createdAt}
@@ -38,7 +40,15 @@ const page = async ({ params }: Params) => {
           videoUrl={video.videoUrl}
         />
       </section>
-    </main>
+    </div>
+  );
+};
+
+const page = async ({ params }: Params) => {
+  return (
+    <Suspense fallback={<VideoDetailShimmer />}>
+      <VideoDetailContent params={params} />
+    </Suspense>
   );
 };
 

@@ -13,14 +13,15 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <nav>
-        <Link href="/">
+        <Link href="/" className="brand-link">
           <Image
             src="/assets/icons/logo.svg"
             alt="Vloom Logo"
             width={32}
             height={32}
+            className="brand-icon"
           />
-          <h1>Vloom</h1>
+          <h1 className="brand-text">Vloom</h1>
         </Link>
 
         {user && (
