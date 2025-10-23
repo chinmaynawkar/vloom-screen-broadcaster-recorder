@@ -32,19 +32,5 @@ export const auth = betterAuth({
     },
   },
   plugins: [nextCookies()],
-  baseURL: process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, '') || 'https://vloom-screen-broadcaster-recorder.vercel.app',
-  trustedOrigins: async (): Promise<string[]> => {
-    const origins = [
-      process.env.NEXT_PUBLIC_BASE_URL?.replace(/\/+$/, ''),
-      process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : undefined,
-      'https://vloom-screen-broadcaster-recorder.vercel.app',
-    ].filter(Boolean) as string[];
-    
-    // Add all possible Vercel preview URLs
-    if (process.env.VERCEL_URL) {
-      origins.push(`https://${process.env.VERCEL_URL}`);
-    }
-    
-    return origins;
-  },
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL
 });
