@@ -30,8 +30,10 @@ export const useFileInput = (maxSize: number) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    
     if (e.target.files?.[0]) {
       const selectedFile = e.target.files[0];
+
 
       if (selectedFile.size > maxSize) {
         return;
@@ -42,19 +44,35 @@ export const useFileInput = (maxSize: number) => {
       const objectUrl = URL.createObjectURL(selectedFile);
       setPreviewUrl(objectUrl);
       
+      
       // Extract duration for video files
       if (selectedFile.type.startsWith('video/')) {
         const video = document.createElement('video');
         video.preload = 'metadata';
-        video.onloadedmetadata = () => {
+        video.crossOrigin = 'anonymous';
+        
+        const handleLoadedMetadata = () => {
           // Only set duration if it's a valid finite number
           if (isFinite(video.duration) && video.duration > 0) {
             setDuration(Math.round(video.duration)); // Round to nearest integer
           } else {
             setDuration(null); // Set to null if invalid
           }
+          // Clean up
+          video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+          video.removeEventListener('error', handleError);
           URL.revokeObjectURL(video.src);
         };
+        
+        const handleError = () => {
+          setDuration(null);
+          video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+          video.removeEventListener('error', handleError);
+          URL.revokeObjectURL(video.src);
+        };
+        
+        video.addEventListener('loadedmetadata', handleLoadedMetadata);
+        video.addEventListener('error', handleError);
         video.src = objectUrl;
       }
     }

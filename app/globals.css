@@ -914,20 +914,25 @@
       }
 
       button {
-        @apply absolute top-3 right-3 p-2.5 rounded-full cursor-pointer;
+        @apply absolute top-3 right-3 p-1.5 rounded-full cursor-pointer;
         background: rgba(239, 68, 68, 0.95);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         transition: all 0.3s ease;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         
         &:hover {
           background: rgba(220, 38, 38, 1);
-          transform: scale(1.1);
+          transform: scale(1.05);
         }
         
         svg {
-          width: 18px;
-          height: 18px;
+          width: 14px;
+          height: 14px;
           color: white;
         }
       }

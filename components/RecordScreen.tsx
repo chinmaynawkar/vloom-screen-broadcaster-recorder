@@ -40,16 +40,15 @@ const RecordScreen = () => {
   const goToUpload = () => {
     if (!recordedBlob) return;
     const url = URL.createObjectURL(recordedBlob);
-    sessionStorage.setItem(
-      "recordedVideo",
-      JSON.stringify({
-        url,
-        name: "screen-recording.webm",
-        type: recordedBlob.type,
-        size: recordedBlob.size,
-        duration: recordingDuration || 0, // Store the duration with the video data
-      })
-    );
+    const videoData = {
+      url,
+      name: "screen-recording.webm",
+      type: recordedBlob.type,
+      size: recordedBlob.size,
+      duration: recordingDuration || 0, // Store the duration with the video data
+    };
+
+    sessionStorage.setItem("recordedVideo", JSON.stringify(videoData));
     router.push("/upload");
     closeModal();
   };

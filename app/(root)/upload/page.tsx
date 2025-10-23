@@ -75,7 +75,12 @@ const UploadPage = () => {
    * Useful for workflows that involve recording a new video in-browser.
    */
   useEffect(() => {
+    let hasProcessed = false; // Flag to prevent multiple processing
+
     const checkForRecordedVideo = async () => {
+      if (hasProcessed) return; // Prevent multiple runs
+      hasProcessed = true;
+
       try {
         // Try loading a previously recorded video from sessionStorage (e.g. after a screen recording workflow)
         const stored = sessionStorage.getItem("recordedVideo");
@@ -89,27 +94,19 @@ const UploadPage = () => {
         // Wrap the blob data in a File object to simulate a user file upload
         const file = new File([blob], name, { type, lastModified: Date.now() });
 
-        if (video.inputRef.current) {
-          // Simulate a manual file input: make a DataTransfer containing the new File
-          const dataTransfer = new DataTransfer();
-          dataTransfer.items.add(file);
-          // Assign the file to the file input field
-          video.inputRef.current.files = dataTransfer.files;
+        // Create a simple mock event for the file change handler
+        const mockEvent = {
+          target: { files: [file] },
+        } as unknown as ChangeEvent<HTMLInputElement>;
 
-          // Dispatch a change event to trigger native input updates and React handler
-          const event = new Event("change", { bubbles: true });
-          video.inputRef.current.dispatchEvent(event);
-
-          // Also call our custom file change handler for hook state update
-          video.handleFileChange({
-            target: { files: dataTransfer.files },
-          } as ChangeEvent<HTMLInputElement>);
-        }
+        // Directly call the file change handler to update the hook state
+        video.handleFileChange(mockEvent);
 
         // Restore the duration if it was saved with the recording
         if (duration) setVideoDuration(duration);
 
         // Clean up: remove the entry and revoke the Blob URL to free memory
+        // Note: We remove from sessionStorage after successful processing to prevent re-processing
         sessionStorage.removeItem("recordedVideo");
         URL.revokeObjectURL(url);
       } catch (err) {
@@ -118,8 +115,14 @@ const UploadPage = () => {
       }
     };
 
-    checkForRecordedVideo();
-  }, [video]);
+    // Add a small delay to ensure component is fully mounted
+    const timeoutId = setTimeout(() => {
+      checkForRecordedVideo();
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Empty dependency array - only run once on mount
 
   /**
    * Handles change in input fields for form data.
